@@ -22,6 +22,8 @@ import fetch, { Headers, Response, Request } from 'cross-fetch';
 import fetchCookie from 'fetch-cookie';
 import { CookieJar, Cookie } from 'tough-cookie';
 import AbortController from 'abort-controller';
+import https from 'https';
+import http from 'http';
 
 export { Headers, Response, Request, CookieJar, Cookie };
 
@@ -43,6 +45,8 @@ type FetchInit = RequestInit & Partial<{
     method: HTTP_METHOD | string;
     cookieJar: CookieJar;
     timeout: number;
+    rejectUnauthorized: boolean;
+    agent: http.Agent | https.Agent;
 }>;
 
 /** @ignore */
@@ -78,6 +82,22 @@ async function gfetch (
     init ??= {};
     init.method ??= HTTP_METHOD.GET;
     init.method = init.method.toUpperCase();
+    init.rejectUnauthorized ??= true;
+
+    // we cannot specify the agent in a browser
+    if (typeof window !== 'undefined') {
+        delete init.agent;
+    } else {
+        let agent: http.Agent | https.Agent;
+
+        if (url.toLowerCase().startsWith('https')) {
+            agent = new https.Agent({ rejectUnauthorized: init.rejectUnauthorized });
+        } else {
+            agent = new http.Agent();
+        }
+
+        init.agent ??= agent;
+    }
 
     const controller = new AbortController();
     let _timeout: NodeJS.Timeout | undefined;

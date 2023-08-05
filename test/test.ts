@@ -20,7 +20,7 @@
 
 import { describe, it, before } from 'mocha';
 import * as assert from 'assert';
-import fetch, { HTTP_METHOD } from '../src/index';
+import fetch, { HTTP_METHOD, toURLSearchParams } from '../src/index';
 
 describe('Unit Tests', async () => {
     const base_url = 'https://webhook.site';
@@ -30,7 +30,7 @@ describe('Unit Tests', async () => {
         'content-type': 'application/json'
     };
 
-    const fetchRequests = async (): Promise<{
+    const fetchRequests = async (formData = false): Promise<{
         method: string,
         body: any
     } | undefined> => {
@@ -44,17 +44,27 @@ describe('Unit Tests', async () => {
 
         const json: {
             data: {
-               method: string;
-               content: string;
+                method: string;
+                content: string;
             }[]
         } = await response.json();
 
         const value = json.data.shift();
 
         if (value) {
+            let body: any | undefined;
+
+            if (value.content.length !== 0) {
+                if (!formData) {
+                    body = JSON.parse(value.content);
+                } else {
+                    body = new URLSearchParams(value.content);
+                }
+            }
+
             return {
                 method: value.method,
-                body: value.content.length !== 0 ? JSON.parse(value.content) : undefined
+                body
             };
         }
     };
@@ -70,38 +80,75 @@ describe('Unit Tests', async () => {
         }
 
         token = (await response.json()).uuid;
+
+        console.log('%s/#!/%s', base_url, token);
     });
 
-    for (const method of Object.keys(HTTP_METHOD)) {
-        it(method, async function () {
-            if (method === 'CONNECT' || method === 'TRACE') {
-                return this.skip();
-            }
+    describe('JSON Tests', async () => {
+        for (const method of Object.keys(HTTP_METHOD)) {
+            it(method, async function () {
+                if (method === 'CONNECT' || method === 'TRACE') {
+                    return this.skip();
+                }
 
-            const body = { test: true };
+                const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-            const response = await fetch[method](`${base_url}/${token}`, {
-                headers,
-                body: JSON.stringify(body),
-                timeout: 5_000
+                const response = await fetch[method](`${base_url}/${token}`, {
+                    json: body,
+                    timeout: 5_000
+                });
+
+                assert.ok(response.ok);
+
+                const validation = await fetchRequests();
+
+                assert.ok(validation);
+
+                assert.equal(method, validation.method);
+
+                switch (method) {
+                    case 'PUT':
+                    case 'POST':
+                    case 'PATCH':
+                    case 'DELETE':
+                        assert.deepEqual(body, validation.body);
+                        break;
+                }
             });
+        }
+    });
 
-            assert.ok(response.ok);
+    describe('Form Data Tests', async () => {
+        for (const method of Object.keys(HTTP_METHOD)) {
+            it(method, async function () {
+                if (method === 'CONNECT' || method === 'TRACE') {
+                    return this.skip();
+                }
 
-            const validation = await fetchRequests();
+                const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-            assert.ok(validation);
+                const response = await fetch[method](`${base_url}/${token}`, {
+                    formData: body,
+                    timeout: 5_000
+                });
 
-            assert.equal(method, validation.method);
+                assert.ok(response.ok);
 
-            switch (method) {
-                case 'PUT':
-                case 'POST':
-                case 'PATCH':
-                case 'DELETE':
-                    assert.deepEqual(body, validation.body);
-                    break;
-            }
-        });
-    }
+                const validation = await fetchRequests(true);
+
+                assert.ok(validation);
+
+                assert.equal(method, validation.method);
+
+                switch (method) {
+                    case 'PUT':
+                    case 'POST':
+                    case 'PATCH':
+                    case 'DELETE':
+                        assert.deepEqual(toURLSearchParams(body), validation.body);
+                        break;
+                }
+            });
+        }
+    });
 });

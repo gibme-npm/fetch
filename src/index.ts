@@ -47,15 +47,15 @@ type FetchInit = RequestInit & Partial<{
     timeout: number;
     rejectUnauthorized: boolean;
     agent: http.Agent | https.Agent;
+    formData: URLSearchParams | {[key: string]: string | number | boolean};
+    json: any;
 }>;
 
 /** @ignore */
 type FetchCall = (url: string, init?: FetchInit) => Promise<Response>;
 
 /** @ignore */
-interface FetchInterface {
-    (url: string, init?: FetchInit): Promise<Response>;
-
+interface FetchInterface extends FetchCall {
     get: FetchCall;
     head: FetchCall;
     post: FetchCall;
@@ -68,6 +68,23 @@ interface FetchInterface {
 
     [key: string]: FetchCall;
 }
+
+/**
+ * Converts the given object into a URLSearchParms object
+ *
+ * Note: only the top-level structure is handled
+ *
+ * @param obj
+ */
+export const toURLSearchParams = (obj: any): URLSearchParams => {
+    const data = new URLSearchParams();
+
+    for (const key of Object.keys(obj)) {
+        data.set(key, obj[key].toString());
+    }
+
+    return data;
+};
 
 /**
  * Cross-platform fetch of web resources
@@ -97,6 +114,43 @@ async function gfetch (
         }
 
         init.agent ??= agent;
+    }
+
+    // assemble the headers into a proper headers class
+    if (!(init.headers instanceof Headers)) {
+        init.headers ??= [];
+
+        const headers = new Headers();
+
+        if (Array.isArray(init.headers)) {
+            for (const [header, value] of init.headers) {
+                headers.set(header, value);
+            }
+        } else {
+            for (const header of Object.keys(init.headers)) {
+                headers.set(header, init.headers[header]);
+            }
+        }
+
+        init.headers = headers;
+    }
+
+    if (init.formData) {
+        init.headers.set('content-type', 'application/x-www-form-urlencoded');
+
+        if (!(init.formData instanceof URLSearchParams)) {
+            init.formData = toURLSearchParams(init.formData);
+        }
+
+        init.body = init.formData;
+    } else if (init.json) {
+        init.headers.set('content-type', 'application/json');
+
+        if (typeof init.json !== 'string') {
+            init.json = JSON.stringify(init.json);
+        }
+
+        init.body = init.json;
     }
 
     const controller = new AbortController();

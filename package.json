@@ -1,6 +1,6 @@
 {
   "name": "@gibme/fetch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple wrapper that extends functionality around the fetch interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "build": "yarn build:typescript",
     "build:docs": "./node_modules/.bin/typedoc",
     "build:typescript": "./node_modules/.bin/tsc",
-    "test": "yarn test:style && yarn test:mocha",
+    "test": "yarn test:style && yarn test:typecheck && yarn test:mocha",
+    "test:typecheck": "./node_modules/.bin/tsc --noEmit",
     "test:style": "yarn style",
     "test:mocha": "./node_modules/.bin/mocha --exit --timeout 120000 --require ts-node/register test/test.ts",
     "style": "./node_modules/.bin/eslint src/**/*.ts test/**/*.ts",
@@ -37,26 +38,26 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "eslint": "^8.26.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.4.0",
+    "@types/node": "^20.4.8",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "eslint": "^8.46.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.24.1",
-    "typescript": "^5.0.4"
+    "typedoc": "^0.24.8",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@types/cookiejar": "^2.1.2",
     "@types/tough-cookie": "^4.0.2",
     "abort-controller": "^3.0.0",
-    "cross-fetch": "^3.1.5",
+    "cross-fetch": "^4.0.0",
     "fetch-cookie": "^2.1.0",
-    "tough-cookie": "^4.1.2"
+    "tough-cookie": "^4.1.3"
   }
 }

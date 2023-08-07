@@ -1,6 +1,6 @@
 {
   "name": "@gibme/fetch",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple wrapper that extends functionality around the fetch interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

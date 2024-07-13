@@ -41,7 +41,7 @@ export enum HTTP_METHOD {
 }
 
 /** @ignore */
-type FetchInit = RequestInit & Partial<{
+export type FetchInit = RequestInit & Partial<{
     method: HTTP_METHOD | string;
     cookieJar: CookieJar;
     timeout: number;
@@ -52,10 +52,10 @@ type FetchInit = RequestInit & Partial<{
 }>;
 
 /** @ignore */
-type FetchCall = (url: string, init?: FetchInit) => Promise<Response>;
+export type FetchCall = (url: string, init?: FetchInit) => Promise<Response>;
 
 /** @ignore */
-interface FetchInterface extends FetchCall {
+export interface FetchInterface extends FetchCall {
     get: FetchCall;
     head: FetchCall;
     post: FetchCall;

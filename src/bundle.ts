@@ -33,17 +33,25 @@ import fetch, {
 
 export {
     fetch,
+    Cookie,
+    CookieJar,
+    FetchCall,
+    FetchInit,
+    FetchInterface,
     Headers,
+    HTTP_METHOD,
     Request,
     Response,
-    CookieJar,
-    HTTP_METHOD,
-    FetchInit,
-    FetchCall,
-    FetchInterface,
     toURLSearchParams
 };
 
 export default {
-    fetch, Headers, Request, Response, Cookie, CookieJar, HTTP_METHOD, toURLSearchParams
+    fetch,
+    Cookie,
+    CookieJar,
+    Headers,
+    HTTP_METHOD,
+    Request,
+    Response,
+    toURLSearchParams
 };

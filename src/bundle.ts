@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import fetch, {
+import Fetch, {
     Cookie,
     CookieJar,
     FetchCall,
@@ -32,7 +32,7 @@ import fetch, {
 } from './index';
 
 export {
-    fetch,
+    Fetch,
     Cookie,
     CookieJar,
     FetchCall,
@@ -46,7 +46,7 @@ export {
 };
 
 export default {
-    fetch,
+    Fetch,
     Cookie,
     CookieJar,
     Headers,

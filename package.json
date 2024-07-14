@@ -1,6 +1,6 @@
 {
   "name": "@gibme/fetch",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A simple wrapper that extends functionality around the fetch interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,6 +12,7 @@
     "build": "yarn build:typescript",
     "build:docs": "./node_modules/.bin/typedoc",
     "build:typescript": "./node_modules/.bin/tsc",
+    "build:webpack": "./node_modules/.bin/auto-pack",
     "test": "yarn test:style && yarn test:typecheck && yarn test:mocha",
     "test:typecheck": "./node_modules/.bin/tsc --noEmit",
     "test:style": "yarn style",
@@ -19,7 +20,7 @@
     "style": "./node_modules/.bin/eslint src/**/*.ts test/**/*.ts",
     "fix-style": "./node_modules/.bin/eslint --fix src/**/*.ts test/**/*.ts",
     "fix:style": "yarn fix-style",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build && yarn build:webpack"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,14 @@
     "name": "Brandon Lehmann",
     "email": "brandonlehmann@gmail.com"
   },
+  "webpack": {
+    "entry": {
+      "Fetch": "./src/bundle.ts"
+    },
+    "launchAnalyzer": false
+  },
   "devDependencies": {
+    "@gibme/auto-pack": "^0.2.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.7",
     "@typescript-eslint/eslint-plugin": "^6.19.1",

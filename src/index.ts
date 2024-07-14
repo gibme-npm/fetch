@@ -80,7 +80,11 @@ export const toURLSearchParams = (obj: any): URLSearchParams => {
     const data = new URLSearchParams();
 
     for (const key of Object.keys(obj)) {
-        data.set(key, obj[key].toString());
+        if (typeof obj[key] === 'object') {
+            data.set(key, JSON.stringify(obj[key]));
+        } else {
+            data.set(key, obj[key].toString());
+        }
     }
 
     return data;

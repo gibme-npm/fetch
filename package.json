@@ -1,6 +1,6 @@
 {
   "name": "@gibme/fetch",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A simple wrapper that extends functionality around the fetch interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -44,7 +44,7 @@
     "launchAnalyzer": false
   },
   "devDependencies": {
-    "@gibme/auto-pack": "^0.2.0",
+    "@gibme/auto-pack": "^0.3.2",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.7",
     "@typescript-eslint/eslint-plugin": "^6.19.1",

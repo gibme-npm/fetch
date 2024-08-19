@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2023-2024, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 
 import { describe, it, before } from 'mocha';
 import * as assert from 'assert';
-import fetch, { HTTP_METHOD, toURLSearchParams } from '../src/index';
+import fetch, { HTTP_METHOD, toURLSearchParams } from '../src';
 
 describe('Unit Tests', async () => {
     const base_url = 'https://webhook.site';
@@ -93,7 +93,7 @@ describe('Unit Tests', async () => {
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-                const response = await fetch[method](`${base_url}/${token}`, {
+                const response = await fetch[method.toLowerCase()](`${base_url}/${token}`, {
                     json: body,
                     timeout: 5_000
                 });
@@ -127,7 +127,7 @@ describe('Unit Tests', async () => {
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-                const response = await fetch[method](`${base_url}/${token}`, {
+                const response = await fetch[method.toLowerCase()](`${base_url}/${token}`, {
                     formData: body,
                     timeout: 5_000
                 });

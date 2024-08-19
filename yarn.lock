@@ -60,13 +60,15 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@gibme/auto-pack@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@gibme/auto-pack/-/auto-pack-0.3.2.tgz#873f7f0c68d9b119265fd63ee5358444f6af8c3e"
-  integrity sha512-SXO4L1hB+WVWI/NnK9aiG6dHPAOt90HQt/W1/TknQxhzUO65GWN+PKeXoT4kyRUHgWZ2bUXKkfAQWHxaLTMj5w==
+"@gibme/auto-pack@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@gibme/auto-pack/-/auto-pack-0.4.3.tgz#d948df9fd3a3f9af35d035aba1632226113eabc0"
+  integrity sha512-vnnhHVUpdfr8CDEqJuoeSg8YfiugRkbjSuspeHs/EBc6plSCBf6Fz3Hv78ZN9aNWg6oBj5Y5UG+ldyqXUHdv4g==
   dependencies:
     "@gibme/logger" "^1.0.10"
     css-loader "^6.8.1"
+    deepmerge "^4.3.1"
+    dotenv "^16.4.5"
     expose-loader "^4.1.0"
     node-polyfill-webpack-plugin "^2.0.1"
     style-loader "^3.3.3"
@@ -1129,6 +1131,11 @@ deep-is@^0.1.3:
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.4.tgz#a6f2dce612fadd2ef1f519b73551f17e85199831"
   integrity sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==
 
+deepmerge@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.3.1.tgz#44b5f2147cd3b00d4b56137685966f26fd25dd4a"
+  integrity sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==
+
 define-data-property@^1.0.1, define-data-property@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/define-data-property/-/define-data-property-1.1.4.tgz#894dc141bb7d3060ae4366f6a0107e68fbe48c5e"
@@ -1216,9 +1223,9 @@ electron-to-chromium@^1.4.820:
   integrity sha512-VY+J0e4SFcNfQy19MEoMdaIcZLmDCprqvBtkii1WTCTQHpRvf5N8+3kTYCgL/PcntvwQvmMJWTuDPsq+IlhWKQ==
 
 elliptic@^6.5.3, elliptic@^6.5.5:
-  version "6.5.5"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.5.tgz#c715e09f78b6923977610d4c2346d6ce22e6dded"
-  integrity sha512-7EjbcmUm17NQFu4Pmgmq2olYMj8nwMnpcddByChSUjArp8F5DQWcIcpriwO4ZToLNAJig0yiyjswfyGNje/ixw==
+  version "6.5.7"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.7.tgz#8ec4da2cb2939926a1b9a73619d768207e647c8b"
+  integrity sha512-ESVCtTwiA+XhY3wyh24QqRGBoP3rEdDUl3EDUUo9tft074fi19IrdpH7hLCMMP3CIj7jb3W96rn8lt/BqIlt5Q==
   dependencies:
     bn.js "^4.11.9"
     brorand "^1.1.0"

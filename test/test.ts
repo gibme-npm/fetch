@@ -30,6 +30,9 @@ describe('Unit Tests', async () => {
         'content-type': 'application/json'
     };
 
+    const sleep = async (ms: number) => new Promise(
+        resolve => setTimeout(resolve, ms));
+
     const fetchRequests = async (formData = false): Promise<{
         method: string,
         body: any
@@ -82,6 +85,8 @@ describe('Unit Tests', async () => {
         token = (await response.json()).uuid;
 
         console.log('%s/#!/%s', base_url, token);
+
+        await sleep(2000);
     });
 
     describe('JSON Tests', async () => {
@@ -99,6 +104,8 @@ describe('Unit Tests', async () => {
                 });
 
                 assert.ok(response.ok);
+
+                await sleep(2000);
 
                 const validation = await fetchRequests();
 
@@ -133,6 +140,8 @@ describe('Unit Tests', async () => {
                 });
 
                 assert.ok(response.ok);
+
+                await sleep(2000);
 
                 const validation = await fetchRequests(true);
 

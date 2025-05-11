@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2023-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,28 @@
 import crossFetch, { Headers, Request, Response } from 'cross-fetch';
 import fetchCookie from 'fetch-cookie';
 import AbortController from 'abort-controller';
-import https from 'https';
-import http from 'http';
-import { normalizeInit, toURLSearchParams } from './helpers';
-import { HTTP_METHOD, Fetch } from './types';
+import { Agent as HttpsAgent } from 'https';
+import { Agent as HttpAgent } from 'http';
+import { normalizeInit } from './helpers';
+import { Cookie, CookieJar } from 'tough-cookie';
 
-export * from './types';
-export { Cookie, CookieJar } from 'tough-cookie';
-export { Headers, Response, Request, toURLSearchParams };
+export { Headers, Request, Response, Cookie, CookieJar };
 
-async function inner (url: string, init: Fetch.InitNode = {}): Promise<Response> {
+/**
+ * Performs a fetch request with the given options
+ * @param url
+ * @param init
+ */
+export async function fetch (
+    url: string | URL,
+    init: fetch.Init = {}
+): Promise<Response> {
     init = normalizeInit(init);
+    url = url.toString();
 
     init.agent ??= url.toLowerCase().startsWith('https')
-        ? new https.Agent({ rejectUnauthorized: init.rejectUnauthorized })
-        : new http.Agent();
+        ? new HttpsAgent({ rejectUnauthorized: init.rejectUnauthorized })
+        : new HttpAgent();
 
     const controller = new AbortController();
     let _timeout: NodeJS.Timeout | undefined;
@@ -48,20 +55,62 @@ async function inner (url: string, init: Fetch.InitNode = {}): Promise<Response>
 
     const response = await (init?.cookieJar
         ? fetchCookie(crossFetch, init.cookieJar)(url, init)
-        : crossFetch(url as any, init));
+        : crossFetch(url, init));
 
     if (_timeout) {
         clearTimeout(_timeout);
     }
 
     return response;
-};
+}
 
-Object.keys(HTTP_METHOD).map(key => key.toLowerCase()).forEach(method => {
-    (inner as any)[method] = async (url: string, init: Fetch.InitNode = {}): Promise<Response> => {
-        return inner(url, { ...init, method: method.toUpperCase() });
-    };
-});
+export namespace fetch {
+    export type Agent = HttpAgent | HttpsAgent;
 
-export const fetch: Fetch.NodeInterface = inner as any;
+    export type Init = RequestInit & {
+        timeout?: number;
+        formData?: URLSearchParams | Record<string, string | number | boolean>;
+        json?: any;
+        cookieJar?: CookieJar;
+        rejectUnauthorized?: boolean;
+        agent?: Agent;
+    }
+
+    export function get (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'GET' });
+    }
+
+    export function head (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'HEAD' });
+    }
+
+    export function post (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'POST' });
+    }
+
+    export function put (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PUT' });
+    }
+
+    export function del (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'DELETE' });
+    }
+
+    export function connect (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'CONNECT' });
+    }
+
+    export function options (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'OPTIONS' });
+    }
+
+    export function trace (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'TRACE' });
+    }
+
+    export function patch (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PATCH' });
+    }
+}
+
 export default fetch;

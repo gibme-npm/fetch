@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2023-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,86 +18,97 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { HTTP_METHOD, Fetch } from './types';
+import type { fetch as FetchWeb } from './web';
+import type { fetch as FetchNode } from './node';
 
 /**
  * Converts the given object into a URLSearchParms object
  *
  * Note: only the top-level structure is handled
- *
  * @param obj
  */
-export const toURLSearchParams = (obj: any): URLSearchParams => {
-    const data = new URLSearchParams();
+export const toURLSearchParams = (
+    obj: Record<string, any>
+): URLSearchParams => {
+    const params = new URLSearchParams();
 
     for (const key of Object.keys(obj)) {
-        if (typeof obj[key] === 'object') {
-            data.set(key, JSON.stringify(obj[key]));
+        if (typeof obj[key] === 'undefined') {
+            params.set(key, '');
+        } else if (typeof obj[key] === 'object') {
+            params.set(key, JSON.stringify(obj[key]));
         } else {
-            data.set(key, obj[key].toString());
+            params.set(key, obj[key].toString());
         }
     }
 
-    return data;
+    return params;
 };
 
 /**
  * Shared init normalization helper
- *
  * @param init
  */
-export const normalizeInit = <T extends Fetch.InitNode = Fetch.InitWeb>(init: T = {} as any): T => {
-    init.method ??= HTTP_METHOD.GET;
-    init.method = init.method.toUpperCase();
-    init.rejectUnauthorized ??= true;
+export const normalizeInit =
+    <T extends FetchNode.Init = FetchWeb.Init>(
+        init: T = {} as any
+    ): T => {
+        init.method ??= 'GET';
+        init.method = init.method.toUpperCase();
+        init.rejectUnauthorized ??= true;
+        init.headers ??= new Headers(); // default to empty headers
 
-    // assemble the headers into a proper headers class
-    if (!(init.headers instanceof Headers)) {
-        init.headers ??= [];
+        if (!['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'].includes(init.method)) {
+            throw new Error(`Invalid method: ${init.method}`);
+        }
 
-        const headers = new Headers();
+        // if the headers are NOT an instance of Headers, then we need to convert them
+        if (!(init.headers instanceof Headers)) {
+            const headers = new Headers();
 
-        if (Array.isArray(init.headers)) {
-            for (const [header, value] of init.headers) {
-                headers.set(header, value);
+            if (Array.isArray(init.headers)) {
+                for (const [header, value] of init.headers) {
+                    headers.set(header, value);
+                }
+            } else if (typeof init.headers === 'object') {
+                for (const header of Object.keys(init.headers)) {
+                    headers.set(header, init.headers[header]);
+                }
+            } else {
+                throw new Error('headers must be an array, object, or instance of Headers');
             }
-        } else {
-            for (const header of Object.keys(init.headers)) {
-                headers.set(header, init.headers[header]);
+
+            init.headers = headers;
+        }
+
+        if (init.formData) {
+            init.headers.set('content-type', 'application/x-www-form-urlencoded');
+
+            if (!(init.formData instanceof URLSearchParams)) {
+                init.formData = toURLSearchParams(init.formData);
             }
+
+            init.body = init.formData;
+        } else if (init.json) {
+            init.headers.set('content-type', 'application/json');
+
+            if (typeof init.json !== 'string') {
+                init.json = JSON.stringify(init.json);
+            }
+
+            init.body = init.json;
         }
 
-        init.headers = headers;
-    }
-
-    if (init.formData) {
-        init.headers.set('content-type', 'application/x-www-form-urlencoded');
-
-        if (!(init.formData instanceof URLSearchParams)) {
-            init.formData = toURLSearchParams(init.formData);
+        switch (init.method) {
+            case 'PUT':
+            case 'POST':
+            case 'PATCH':
+            case 'DELETE':
+                break;
+            default:
+                delete init.body;
+                break;
         }
 
-        init.body = init.formData;
-    } else if (init.json) {
-        init.headers.set('content-type', 'application/json');
-
-        if (typeof init.json !== 'string') {
-            init.json = JSON.stringify(init.json);
-        }
-
-        init.body = init.json;
-    }
-
-    switch (init.method) {
-        case HTTP_METHOD.PUT:
-        case HTTP_METHOD.POST:
-        case HTTP_METHOD.PATCH:
-        case HTTP_METHOD.DELETE:
-            break;
-        default:
-            delete init.body;
-            break;
-    }
-
-    return init;
-};
+        return init;
+    };

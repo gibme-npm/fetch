@@ -19,7 +19,7 @@ import fetch from '@gibme/fetch';
 #### Using a CookieJar
 
 ```typescript
-import fetch, {CookieJar } from "@gibme/fetch";
+import fetch, { CookieJar } from "@gibme/fetch";
 
 (async () => {
     const cookieJar = new CookeJar();

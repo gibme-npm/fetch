@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2023-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,15 +19,29 @@
 // SOFTWARE.
 
 import { describe, it, before } from 'mocha';
-import * as assert from 'assert';
-import fetch, { HTTP_METHOD, toURLSearchParams } from '../src';
+import assert from 'assert';
+import fetch from '../src/node';
+import { toURLSearchParams } from '../src/helpers';
+
+export const HTTP_METHODS = [
+    'GET',
+    'HEAD',
+    'POST',
+    'PUT',
+    'DELETE',
+    'CONNECT',
+    'OPTIONS',
+    'TRACE',
+    'PATCH'
+];
 
 describe('Unit Tests', async () => {
     const base_url = 'https://webhook.site';
     let token = '';
     const headers = {
         accept: 'application/json',
-        'content-type': 'application/json'
+        'content-type': 'application/json',
+        'X-Test': 'true'
     };
 
     const sleep = async (ms: number) => new Promise(
@@ -74,7 +88,7 @@ describe('Unit Tests', async () => {
 
     before(async () => {
         const response = await fetch(`${base_url}/token`, {
-            method: HTTP_METHOD.POST,
+            method: 'POST',
             headers
         });
 
@@ -90,7 +104,7 @@ describe('Unit Tests', async () => {
     });
 
     describe('JSON Tests', async () => {
-        for (const method of Object.keys(HTTP_METHOD)) {
+        for (const method of HTTP_METHODS) {
             it(method, async function () {
                 if (method === 'CONNECT' || method === 'TRACE') {
                     return this.skip();
@@ -98,9 +112,10 @@ describe('Unit Tests', async () => {
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-                const response = await fetch[method.toLowerCase()](`${base_url}/${token}`, {
+                const response = await fetch(`${base_url}/${token}`, {
                     json: body,
-                    timeout: 5_000
+                    timeout: 5_000,
+                    method
                 });
 
                 assert.ok(response.ok);
@@ -126,7 +141,7 @@ describe('Unit Tests', async () => {
     });
 
     describe('Form Data Tests', async () => {
-        for (const method of Object.keys(HTTP_METHOD)) {
+        for (const method of HTTP_METHODS) {
             it(method, async function () {
                 if (method === 'CONNECT' || method === 'TRACE') {
                     return this.skip();
@@ -134,9 +149,10 @@ describe('Unit Tests', async () => {
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };
 
-                const response = await fetch[method.toLowerCase()](`${base_url}/${token}`, {
+                const response = await fetch(`${base_url}/${token}`, {
                     formData: body,
-                    timeout: 5_000
+                    timeout: 5_000,
+                    method
                 });
 
                 assert.ok(response.ok);

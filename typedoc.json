@@ -3,7 +3,7 @@
   "excludeExternals": true,
   "excludePrivate": true,
   "entryPoints": [
-    "./src/index.ts",
+    "./src/node.ts",
     "./src/web.ts"
   ],
   "disableSources": true,

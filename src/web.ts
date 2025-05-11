@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024, Brandon Lehmann <brandonlehmann@gmail.com>
+// Copyright (c) 2023-2025, Brandon Lehmann <brandonlehmann@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,21 @@
 
 import crossFetch, { Headers, Request, Response } from 'cross-fetch';
 import AbortController from 'abort-controller';
-import { normalizeInit, toURLSearchParams } from './helpers';
-import { HTTP_METHOD, Fetch as FTypes } from './types';
+import { normalizeInit } from './helpers';
 
-export * from './types';
-export { Headers, Response, Request, toURLSearchParams };
+export { Headers, Response, Request };
 
-async function inner (url: string, init: FTypes.InitWeb = {}): Promise<Response> {
+/**
+ * Performs a fetch request with the given options
+ * @param url
+ * @param init
+ */
+export async function fetch (
+    url: string | URL,
+    init: fetch.Init = {}
+): Promise<Response> {
     init = normalizeInit(init);
+    url = url.toString();
 
     const controller = new AbortController();
     let _timeout: NodeJS.Timeout | undefined;
@@ -47,11 +54,48 @@ async function inner (url: string, init: FTypes.InitWeb = {}): Promise<Response>
     return response;
 }
 
-Object.keys(HTTP_METHOD).map(key => key.toLowerCase()).forEach(method => {
-    (inner as any)[method] = async (url: string, init: FTypes.InitWeb = {}): Promise<Response> => {
-        return inner(url, { ...init, method: method.toUpperCase() });
-    };
-});
+export namespace fetch {
+    export type Init = RequestInit & {
+        timeout?: number;
+        formData?: URLSearchParams | Record<string, string | number | boolean>;
+        json?: any;
+    }
 
-export const Fetch: FTypes.WebInterface = inner as any;
-export default Fetch;
+    export function get (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'GET' });
+    }
+
+    export function head (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'HEAD' });
+    }
+
+    export function post (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'POST' });
+    }
+
+    export function put (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PUT' });
+    }
+
+    export function del (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'DELETE' });
+    }
+
+    export function connect (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'CONNECT' });
+    }
+
+    export function options (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'OPTIONS' });
+    }
+
+    export function trace (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'TRACE' });
+    }
+
+    export function patch (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PATCH' });
+    }
+}
+
+export default fetch;

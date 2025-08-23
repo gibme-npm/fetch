@@ -1,6 +1,6 @@
 {
   "name": "@gibme/fetch",
-  "version": "2.0.0",
+  "version": "20.0.0",
   "description": "A simple wrapper that extends functionality around the fetch interface",
   "main": "dist/node.js",
   "types": "dist/node.d.ts",
@@ -45,7 +45,7 @@
     "url": "https://github.com/gibme-npm/fetch/issues"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "engineStrict": true,
   "author": {
@@ -59,9 +59,9 @@
     "filename": "[name].min.js"
   },
   "devDependencies": {
-    "@gibme/auto-pack": "^0.4.7",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^22.15.17",
+    "@gibme/auto-pack": "^20.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "eslint": "^8.56.0",
@@ -70,17 +70,18 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
-    "mocha": "^10.2.0",
+    "mocha": "^11.7.1",
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@types/cookiejar": "^2.1.5",
     "@types/tough-cookie": "^4.0.5",
     "abort-controller": "^3.0.0",
+    "buffer": "^6.0.3",
     "cross-fetch": "^4.1.0",
     "fetch-cookie": "^3.1.0",
-    "tough-cookie": "^5.1.2"
+    "tough-cookie": "^6.0.0"
   }
 }

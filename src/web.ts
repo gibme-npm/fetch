@@ -59,6 +59,10 @@ export namespace fetch {
         timeout?: number;
         formData?: URLSearchParams | Record<string, string | number | boolean>;
         json?: any;
+        username?: string;
+        password?: string;
+        bearer?: string;
+        jwt?: string;
     }
 
     export function get (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
@@ -99,3 +103,4 @@ export namespace fetch {
 }
 
 export default fetch;
+export { fetch as Fetch };

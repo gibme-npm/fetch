@@ -20,6 +20,8 @@
 
 import type { fetch as FetchWeb } from './web';
 import type { fetch as FetchNode } from './node';
+import { Headers } from 'cross-fetch';
+import { Buffer } from 'buffer';
 
 /**
  * Converts the given object into a URLSearchParms object
@@ -79,6 +81,16 @@ export const normalizeInit =
             }
 
             init.headers = headers;
+        }
+
+        if (init.username && init.password) {
+            const auth = Buffer.from(`${init.username}:${init.password}`).toString('base64');
+
+            init.headers.set('authorization', `Basic ${auth}`);
+        } else if (init.bearer) {
+            init.headers.set('authorization', `Bearer ${init.bearer}`);
+        } else if (init.jwt) {
+            init.headers.set('authorization', `Bearer ${init.jwt}`);
         }
 
         if (init.formData) {

@@ -74,6 +74,10 @@ export namespace fetch {
         cookieJar?: CookieJar;
         rejectUnauthorized?: boolean;
         agent?: Agent;
+        username?: string;
+        password?: string;
+        bearer?: string;
+        jwt?: string;
     }
 
     export function get (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
@@ -114,3 +118,4 @@ export namespace fetch {
 }
 
 export default fetch;
+export { fetch as Fetch };

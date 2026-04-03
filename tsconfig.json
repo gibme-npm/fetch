@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2022",
     "lib": [
-      "es2017",
-      "dom",
-      "scripthost"
+      "ES2022",
+      "dom"
     ],
     "module": "commonjs",
     "declaration": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
-    "downlevelIteration": true,
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*"

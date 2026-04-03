@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { describe, it, before } from 'mocha';
+import { describe, it, before } from 'node:test';
 import assert from 'assert';
 import fetch from '../src/node';
 import { toURLSearchParams } from '../src/helpers';
@@ -105,9 +105,9 @@ describe('Unit Tests', async () => {
 
     describe('JSON Tests', async () => {
         for (const method of HTTP_METHODS) {
-            it(method, async function () {
+            it(method, { skip: false }, async (t) => {
                 if (method === 'CONNECT' || method === 'TRACE') {
-                    return this.skip();
+                    return t.skip('Unsupported HTTP method');
                 }
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };
@@ -142,9 +142,9 @@ describe('Unit Tests', async () => {
 
     describe('Form Data Tests', async () => {
         for (const method of HTTP_METHODS) {
-            it(method, async function () {
+            it(method, { skip: false }, async (t) => {
                 if (method === 'CONNECT' || method === 'TRACE') {
-                    return this.skip();
+                    return t.skip('Unsupported HTTP method');
                 }
 
                 const body = { test: true, test_string: 'test', test_number: 3.9 };

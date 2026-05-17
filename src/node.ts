@@ -115,6 +115,66 @@ export namespace fetch {
     export function patch (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
         return fetch(url, { ...init, method: 'PATCH' });
     }
+
+    export function propFind (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PROPFIND' });
+    }
+
+    export function propPatch (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'PROPPATCH' });
+    }
+
+    export function mkCol (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'MKCOL' });
+    }
+
+    export function copy (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'COPY' });
+    }
+
+    export function move (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'MOVE' });
+    }
+
+    export function lock (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'LOCK' });
+    }
+
+    export function unlock (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'UNLOCK' });
+    }
+
+    export function mkCalendar (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'MKCALENDAR' });
+    }
+
+    export function report (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'REPORT' });
+    }
+
+    export function acl (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'ACL' });
+    }
+
+    export function search (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'SEARCH' });
+    }
+
+    export function query (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'QUERY' });
+    }
+
+    export function bind (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'BIND' });
+    }
+
+    export function unbind (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'UNBIND' });
+    }
+
+    export function rebind (url: string | URL, init: Omit<fetch.Init, 'method'> = {}): Promise<Response> {
+        return fetch(url, { ...init, method: 'REBIND' });
+    }
 }
 
 export default fetch;

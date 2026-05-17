@@ -23,6 +23,43 @@ import type { fetch as FetchNode } from './node';
 import { Headers } from 'cross-fetch';
 import { Buffer } from 'buffer';
 
+/** @ignore */
+export const HTTP_METHODS = [
+    'GET',
+    'HEAD',
+    'POST',
+    'PUT',
+    'DELETE',
+    'CONNECT',
+    'OPTIONS',
+    'TRACE',
+    'PATCH',
+    'PROPFIND',
+    'REPORT',
+    'PROPPATCH',
+    'MKCOL',
+    'MKCALENDAR',
+    'COPY',
+    'MOVE',
+    'LOCK',
+    'UNLOCK',
+    'ACL',
+    'SEARCH',
+    'QUERY',
+    'BIND',
+    'UNBIND',
+    'REBIND'
+];
+
+/** @ignore */
+export const HTTP_METHOD_BODY_REMOVE = [
+    'GET',
+    'HEAD',
+    'OPTIONS',
+    'TRACE',
+    'CONNECT'
+];
+
 /**
  * Converts the given object into a URLSearchParms object
  *
@@ -60,7 +97,7 @@ export const normalizeInit =
         init.rejectUnauthorized ??= true;
         init.headers ??= new Headers(); // default to empty headers
 
-        if (!['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'].includes(init.method)) {
+        if (!HTTP_METHODS.includes(init.method)) {
             throw new Error(`Invalid method: ${init.method}`);
         }
 
@@ -111,15 +148,8 @@ export const normalizeInit =
             init.body = init.json;
         }
 
-        switch (init.method) {
-            case 'PUT':
-            case 'POST':
-            case 'PATCH':
-            case 'DELETE':
-                break;
-            default:
-                delete init.body;
-                break;
+        if (HTTP_METHOD_BODY_REMOVE.includes(init.method)) {
+            delete init.body;
         }
 
         return init;

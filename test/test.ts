@@ -21,18 +21,26 @@
 import { describe, it, before } from 'node:test';
 import assert from 'assert';
 import fetch from '../src/node';
-import { toURLSearchParams } from '../src/helpers';
+import { HTTP_METHODS, HTTP_METHOD_BODY_REMOVE, toURLSearchParams } from '../src/helpers';
 
-export const HTTP_METHODS = [
-    'GET',
-    'HEAD',
-    'POST',
-    'PUT',
-    'DELETE',
+const WEBHOOK_SITE_UNSUPPORTED = [
     'CONNECT',
-    'OPTIONS',
     'TRACE',
-    'PATCH'
+    'PROPFIND',
+    'PROPPATCH',
+    'MKCOL',
+    'COPY',
+    'MOVE',
+    'LOCK',
+    'UNLOCK',
+    'MKCALENDAR',
+    'REPORT',
+    'ACL',
+    'SEARCH',
+    'QUERY',
+    'BIND',
+    'UNBIND',
+    'REBIND'
 ];
 
 describe('Unit Tests', async () => {
@@ -106,7 +114,7 @@ describe('Unit Tests', async () => {
     describe('JSON Tests', async () => {
         for (const method of HTTP_METHODS) {
             it(method, { skip: false }, async (t) => {
-                if (method === 'CONNECT' || method === 'TRACE') {
+                if (WEBHOOK_SITE_UNSUPPORTED.includes(method)) {
                     return t.skip('Unsupported HTTP method');
                 }
 
@@ -128,13 +136,8 @@ describe('Unit Tests', async () => {
 
                 assert.equal(method, validation.method);
 
-                switch (method) {
-                    case 'PUT':
-                    case 'POST':
-                    case 'PATCH':
-                    case 'DELETE':
-                        assert.deepEqual(body, validation.body);
-                        break;
+                if (!HTTP_METHOD_BODY_REMOVE.includes(method)) {
+                    assert.deepEqual(body, validation.body);
                 }
             });
         }
@@ -143,7 +146,7 @@ describe('Unit Tests', async () => {
     describe('Form Data Tests', async () => {
         for (const method of HTTP_METHODS) {
             it(method, { skip: false }, async (t) => {
-                if (method === 'CONNECT' || method === 'TRACE') {
+                if (WEBHOOK_SITE_UNSUPPORTED.includes(method)) {
                     return t.skip('Unsupported HTTP method');
                 }
 
@@ -165,13 +168,8 @@ describe('Unit Tests', async () => {
 
                 assert.equal(method, validation.method);
 
-                switch (method) {
-                    case 'PUT':
-                    case 'POST':
-                    case 'PATCH':
-                    case 'DELETE':
-                        assert.deepEqual(toURLSearchParams(body), validation.body);
-                        break;
+                if (!HTTP_METHOD_BODY_REMOVE.includes(method)) {
+                    assert.deepEqual(toURLSearchParams(body), validation.body);
                 }
             });
         }

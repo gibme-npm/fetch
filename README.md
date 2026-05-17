@@ -8,7 +8,7 @@ A TypeScript wrapper around [cross-fetch](https://npmjs.org/package/cross-fetch)
 - **Cookie jar persistence** — maintain cookies across requests (Node.js only)
 - **Authentication helpers** — Basic, Bearer, and JWT auth via simple options
 - **JSON & form data shortcuts** — auto-serialization with correct `Content-Type` headers
-- **HTTP method helpers** — `fetch.get()`, `fetch.post()`, `fetch.put()`, `fetch.del()`, etc.
+- **HTTP method helpers** — `fetch.get()`, `fetch.post()`, `fetch.put()`, `fetch.del()`, plus WebDAV, CalDAV, and other extended methods
 - **Custom agents** — pass `http.Agent` or `https.Agent` for connection pooling (Node.js only)
 - **SSL/TLS control** — disable certificate validation for development (Node.js only)
 - **Dual entry points** — optimized builds for Node.js and browser
@@ -52,7 +52,9 @@ const updated = await fetch.put('https://api.example.com/users/1', {
 const deleted = await fetch.del('https://api.example.com/users/1');
 ```
 
-All methods: `fetch.get()`, `fetch.post()`, `fetch.put()`, `fetch.del()`, `fetch.head()`, `fetch.patch()`, `fetch.options()`, `fetch.trace()`, `fetch.connect()`
+**Standard HTTP**: `fetch.get()`, `fetch.head()`, `fetch.post()`, `fetch.put()`, `fetch.del()`, `fetch.patch()`, `fetch.options()`, `fetch.trace()`, `fetch.connect()`, `fetch.query()`
+
+**WebDAV family** (WebDAV, CalDAV, ACL, Search, Bindings): `fetch.propFind()`, `fetch.propPatch()`, `fetch.mkCol()`, `fetch.mkCalendar()`, `fetch.copy()`, `fetch.move()`, `fetch.lock()`, `fetch.unlock()`, `fetch.report()`, `fetch.acl()`, `fetch.search()`, `fetch.bind()`, `fetch.unbind()`, `fetch.rebind()`
 
 ### JSON Body
 
